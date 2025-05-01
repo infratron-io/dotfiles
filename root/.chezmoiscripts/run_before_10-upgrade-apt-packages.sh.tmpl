@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# {{ include (joinPath .chezmoi.sourceDir ".chezmoitemplates/scripts-library") }}
+
+# The following line is for ShellCheck to correctly identify the above included library
+true || source ../.chezmoitemplates/scripts-library
+
+c apt update
+c apt upgrade -y
+c apt dist-upgrade -y
+c apt autoremove -y
