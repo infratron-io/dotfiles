@@ -70,6 +70,13 @@
     command: gpg
     args: ["--dearmor"]
 
+"usr/share/keyrings/spotify.gpg":
+  type: file
+  url: "https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg"
+  filter:
+    command: gpg
+    args: ["--dearmor"]
+
 {{ end }}
 
 "usr/local/bin/docker-compose":
