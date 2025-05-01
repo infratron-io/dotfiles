@@ -39,6 +39,13 @@
   stripComponents: 1
   exact: true
 
+".oh-my-zsh/custom/plugins/fzf-tab":
+  type: archive
+  {{ $fsfTabRevision := includeTemplate "get-github-latest-version" (list "Aloxaf/fzf-tab" $cache) }}
+  url: "https://github.com/Aloxaf/fzf-tab/archive/refs/tags/v{{ $fsfTabRevision}}.tar.gz"
+  stripComponents: 1
+  exact: true
+
 ".config/gitalias/gitalias.txt":
   type: file
   {{ $gitaliasRevision := includeTemplate "get-github-head-revision" (list "GitAlias/gitalias" $cache) }}
@@ -125,12 +132,6 @@
   {{ $codeNautilusRevision := includeTemplate "get-github-head-revision" (list "harry-cpp/code-nautilus" $cache) }}
   url: "https://raw.githubusercontent.com/harry-cpp/code-nautilus/{{ $codeNautilusRevision }}/code-nautilus.py"
 {{-  end }}
-
-".local/bin/skopeo":
-  type: file
-  {{ $skopeoVersion := includeTemplate "get-github-latest-version" (list "infratron/skopeo-bin" $cache) }}
-  url: "https://github.com/infratron/skopeo-bin/releases/download/v{{ $skopeoVersion }}/skopeo.linux-{{ .chezmoi.arch }}"
-  executable: true
 
 ".deno/bin/deno":
   type: archive-file
