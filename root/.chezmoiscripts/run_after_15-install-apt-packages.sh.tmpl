@@ -34,6 +34,11 @@ readonly wanted_packages=(
   asciinema
   dnsutils
 
+  # Hyprland
+  # {{ if .install_hyprland }}
+  mason
+  # {{ end }}
+
   ## Window manager we will leave gnome available for now
   # {{ if .is_gnome }}
   yaru-theme-gtk
