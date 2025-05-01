@@ -106,7 +106,7 @@ data:
   is_devcontainer: {{ $minimum }}
   is_gnome: {{ $gnome }}
   is_headless: {{ $headless }}
-  install_hyprland: true
+  install_hyprland: {{ (float .chezmoi.osRelease.versionID) > 24 }}
 
   name: "{{ $name }}"
   email: "{{ $email }}"
