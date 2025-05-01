@@ -1,6 +1,8 @@
 {{ if not .is_gnome }}
 etc/apt/sources.list.d/vscode.list
 etc/apt/sources.list.d/google-chrome.list
+etc/apt/sources.list.d/password.list
+etc/apt/sources.list.d/spotify.list
 {{ end }}
 
 {{ if .is_wsl }}
