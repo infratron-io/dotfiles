@@ -11,14 +11,14 @@ function is_gnome_extension_installed() {
   local extension="$1"
 
   # https://github.com/essembeh/gnome-extensions-cli/issues/29
-  gnome-extensions list | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | grep --quiet "(${extension})"
+  gnome-extensions list | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | grep --quiet "${extension}"
 }
 
 function is_gnome_extension_enabled() {
   local extension="$1"
 
   # https://github.com/essembeh/gnome-extensions-cli/issues/29
-  gnome-extensions list --enabled | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | grep --quiet "(${extension})"
+  gnome-extensions list --enabled | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | grep --quiet "${extension}"
 }
 
 wanted_extensions=(
