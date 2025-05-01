@@ -99,21 +99,6 @@ git clone https://github.com/infratron/dotfiles "$HOME/.dotfiles"
 
 ---
 
-### Forking guide
-
-If you are forking this repository, don't forget to change the following places:
-
-- [`README.md`](./README.md)
-  - Replace all occurrences of `https://git.io/infratron-dotfiles` with `https://raw.githubusercontent.com/<your-username>/dotfiles/HEAD/scripts/install_dotfiles.sh`
-- [`scripts/install_dotfiles.sh`](./scripts/install_dotfiles.sh)
-  - Replace all occurrences of `infratron` with `<your-username>`
-- [`home/.chezmoi.yaml.tmpl`](./home/.chezmoi.yaml.tmpl)
-  - Change the name and email to yours.
-
-Where `<your-username>` is your GitHub username.
-
----
-
 ### Extra scripts
 
 There are some scripts here to help you automate tricky activities when setting up your machine.
