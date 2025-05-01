@@ -50,6 +50,7 @@ readonly wanted_packages=(
   google-chrome-stable
   python3-nautilus
   1password
+  spotify-client
 
   # {{   if not .is_wsl }}
   yaru-theme-gnome-shell
@@ -65,7 +66,7 @@ readonly wanted_packages=(
   linux-generic-hwe-22.04
   # {{   else if eq .chezmoi.osRelease.versionCodename "focal" }}
   linux-generic-hwe-20.04
-    # {{   else if eq .chezmoi.osRelease.versionCodename "noble" }}
+  # {{   else if eq .chezmoi.osRelease.versionCodename "noble" }}
   linux-generic-hwe-24.04
   # {{   end }}
   # {{ end }}
@@ -84,7 +85,7 @@ if [[ ${#missing_packages[@]} -gt 0 ]]; then
 
   c apt update
   c apt upgrade --yes
-  
+
   extra_args=()
   if [[ "${DOTFILES_TEST:-}" == true ]]; then
     log_manual_action "Not installing recommended packages to speed up test mode"
