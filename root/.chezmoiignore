@@ -5,6 +5,10 @@ etc/apt/sources.list.d/password.list
 etc/apt/sources.list.d/spotify.list
 {{ end }}
 
+{{ if not .install_hyprland }}
+etc/apt/sources.list.d/hyprland.list
+{{ end }}
+
 {{ if .is_wsl }}
 etc/ssh
 .chezmoiscripts/*-reload-sshd.sh
