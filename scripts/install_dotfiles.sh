@@ -70,7 +70,7 @@ git_clean() {
 }
 
 DOTFILES_REPO_HOST=${DOTFILES_REPO_HOST:-"https://github.com"}
-DOTFILES_USER=${DOTFILES_USER:-"infratron"}
+DOTFILES_USER=${DOTFILES_USER:-"infratron-io"}
 DOTFILES_REPO="${DOTFILES_REPO_HOST}/${DOTFILES_USER}/dotfiles"
 DOTFILES_BRANCH=${DOTFILES_BRANCH:-"master"}
 DOTFILES_DIR="${HOME}/.dotfiles"
