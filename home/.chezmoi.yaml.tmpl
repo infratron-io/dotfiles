@@ -102,11 +102,16 @@ hooks:
 
 {{/* Here we "export" the variables, so we can access them outside this file */ -}}
 data:
+
+  {{- $major := (atoi (index (split .chezmoi.osRelease.versionID ".") 0)) -}}
+  osMajor: {{ $major }}
+
   is_wsl: {{ $wsl }}
   is_devcontainer: {{ $minimum }}
   is_gnome: {{ $gnome }}
   is_headless: {{ $headless }}
-  install_hyprland: {{ (float .chezmoi.osRelease.versionID) > 24 }}
+
+  install_hyprland: {{ if gt $major 23 }}true{{ else }}false{{ end }}
 
   name: "{{ $name }}"
   email: "{{ $email }}"
