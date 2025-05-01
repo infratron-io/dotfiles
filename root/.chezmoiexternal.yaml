@@ -27,7 +27,7 @@
 {{ end }}
 
 {{ if .install_hyprland }}
-"usr/share/keyrings/hyperland-keyring.gpg":
+"usr/share/keyrings/hyprland-archive-keyring.gpg":
   type: file
   url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA54D23B62FF3FCC76EFF71E8FDBAAA1CF0CCF48E"
   filter:

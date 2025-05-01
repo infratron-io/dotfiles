@@ -102,14 +102,20 @@ hooks:
 
 {{/* Here we "export" the variables, so we can access them outside this file */ -}}
 data:
+
   is_wsl: {{ $wsl }}
   is_devcontainer: {{ $minimum }}
   is_gnome: {{ $gnome }}
   is_headless: {{ $headless }}
-  install_hyprland: true
+
+  {{ $majorVersion := substr 0 2 .chezmoi.osRelease.versionID | atoi -}}
+  {{ $install_hyprland := ge $majorVersion 24 -}}
+  install_hyprland: {{ $install_hyprland }}
 
   name: "{{ $name }}"
   email: "{{ $email }}"
+
+  majorVersion: {{ $majorVersion }}
 
   editor: "vim"
 
