@@ -43,7 +43,5 @@ if [[ ${#missing_packages[@]} -gt 0 ]]; then
   ensure_path_entry "${HOME}/.cargo/bin"
 
   for package in "${missing_packages[@]}"; do
-    retry --tries 3 --sleep 15s -- \
       cargo install "${package}"
-  done
 fi
