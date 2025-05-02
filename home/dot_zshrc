@@ -128,6 +128,11 @@ autoload -U compinit && compinit
 
 source "${ZSH}/oh-my-zsh.sh"
 
+
+[[ -f ~/.zsh/zstyle.zsh ]] && source ~/.zsh/zstyle.zsh
+[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
+[[ -f ~/.cargo/env ]] && source ~/.cargo/env
+
 # https://github.com/microsoft/vscode/issues/153400#issue-1286534600
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
   ITERM_SHELL_INTEGRATION_INSTALLED="Yes"
@@ -145,7 +150,3 @@ fi
 if [[ -f "${HOME}/.p10k.zsh" ]]; then
   source "${HOME}/.p10k.zsh"
 fi
-
-[[ -f ~/.zsh/zstyle.zsh ]] && source ~/.zsh/zstyle.zsh
-[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
-[[ -f ~/.cargo/env ]] && source ~/.cargo/env
