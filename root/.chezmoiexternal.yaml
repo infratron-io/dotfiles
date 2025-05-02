@@ -36,6 +36,13 @@
 {{ end }}
 
 {{ if .is_gnome }}
+"usr/share/keyrings/ulauncher-archive-keyring.gpg":
+  type: file
+  url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xfaf1020699503176"
+  filter:
+    command: gpg
+    args: ["--dearmor"]
+
 "usr/share/keyrings/vscode-archive-keyring.gpg":
   type: file
   url: "https://packages.microsoft.com/keys/microsoft.asc"
