@@ -44,4 +44,5 @@ if [[ ${#missing_packages[@]} -gt 0 ]]; then
 
   for package in "${missing_packages[@]}"; do
       cargo install "${package}"
+  done
 fi
