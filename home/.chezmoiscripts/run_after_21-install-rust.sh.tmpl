@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# {{ template "scripts-library" }}
+# {{ template "rust-library" }}
+
+# The following line is for ShellCheck to correctly identify the above include
+true || source ../.chezmoitemplates/scripts-library
+true || source ../.chezmoitemplates/rust-library
+
+if ! command -v rustup >/dev/null; then
+  log_task "Installing rustup"
+  command curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+else
+  log_task "Updating rustup"
+  command rustup self update
+fi

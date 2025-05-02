@@ -109,7 +109,7 @@ data:
   is_headless: {{ $headless }}
 
   {{ $majorVersion := substr 0 2 .chezmoi.osRelease.versionID | atoi -}}
-  {{ $install_hyprland := ge $majorVersion 24 -}}
+  {{ $install_hyprland := and (ge $majorVersion 24) (not $gnome) (not $headless) -}}
   install_hyprland: {{ $install_hyprland }}
 
   name: "{{ $name }}"
