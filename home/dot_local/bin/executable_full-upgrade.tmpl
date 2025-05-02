@@ -3,11 +3,13 @@
 # {{ template "scripts-library" }}
 # {{ template "homebrew-library" }}
 # {{ template "volta-library" }}
+# {{ template "rust-library" }}
 
 # The following line is for ShellCheck to correctly identify the above include
 true || source ../../.chezmoitemplates/scripts-library
 true || source ../../.chezmoitemplates/homebrew-library
 true || source ../../.chezmoitemplates/volta-library
+true || source ../../.chezmoitemplates/rust-library
 
 ensure_path_entry "${HOME}/.local/bin"
 
@@ -139,9 +141,19 @@ if pipx --version &>/dev/null; then
   c pipx upgrade-all
 fi
 
+if cargo --version &>/dev/null; then
+  log_task "Updating cargo packages"
+  c cargo install-update -a
+fi
+
 if volta --version &>/dev/null; then
   log_task "Updating node, npm and yarn with volta"
   c volta install node npm yarn
+fi
+
+if topgrade --version &>/dev/null; then
+  log_task "Running topgrade to update all packages"
+  c topgrade --yes --no-retry
 fi
 
 if npm --version &>/dev/null; then
