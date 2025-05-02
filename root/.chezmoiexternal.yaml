@@ -26,6 +26,13 @@
     args: ["--dearmor"]
 {{ end }}
 
+"usr/share/keyrings/tailscale-archive-keyring.gpg":
+  type: file
+  url: "https://pkgs.tailscale.com/stable/ubuntu/noble.noarmor.gpg"
+  filter:
+    command: gpg
+    args: ["--dearmor"]
+
 {{ if .install_hyprland }}
 "usr/share/keyrings/hyprland-archive-keyring.gpg":
   type: file
