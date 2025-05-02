@@ -131,7 +131,7 @@ source "${ZSH}/oh-my-zsh.sh"
 
 [[ -f ~/.zsh/zstyle.zsh ]] && source ~/.zsh/zstyle.zsh
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
-[[ -f ~/.cargo/env ]] && source ~/.cargo/env
+[[ -s ~/.cargo/env ]] && source ~/.cargo/env
 
 # https://github.com/microsoft/vscode/issues/153400#issue-1286534600
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
