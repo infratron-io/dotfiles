@@ -147,3 +147,4 @@ if [[ -f "${HOME}/.p10k.zsh" ]]; then
 fi
 
 [[ -f ~/.zsh/zstyle.zsh ]] && source ~/.zsh/zstyle.zsh
+[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
