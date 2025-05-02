@@ -39,6 +39,16 @@ gsettings_ensure org.gnome.desktop.sound theme-name "Yaru"
 # {{ if ge .chezmoi.osRelease.versionID "22.04" }}
 gsettings_ensure org.gnome.desktop.interface color-scheme "prefer-dark"
 # {{ else }}
+
+# Setup Ulauncher as default launcher on GNOME
+CKBPATH=org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings
+# Disable default mapping for Super
+gsettings_ensure org.gnome.mutter overlay-key 'Super_L+Space'
+# Add custom keybinding for Ulauncher
+gsettings_ensure "${CKBPATH}"/ulauncher/ name 'ulauncher'
+gsettings_ensure "${CKBPATH}"/ulauncher/ command 'ulauncher-toggle'
+gsettings_ensure "${CKBPATH}"/ulauncher/ binding 'Super_L'
+
 # {{   if not .is_wsl }}
 gsettings_ensure org.gnome.shell.extensions.user-theme name "Yaru-dark" user-theme@gnome-shell-extensions.gcampax.github.com
 # {{   end }}
