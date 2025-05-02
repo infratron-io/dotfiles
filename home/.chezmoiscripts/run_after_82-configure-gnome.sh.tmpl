@@ -41,7 +41,7 @@ gsettings_ensure org.gnome.desktop.interface color-scheme "prefer-dark"
 # {{ else }}
 
 # Setup Ulauncher as default launcher on GNOME
-gsettings_ensure org.gnome.mutter overlay-key ''
+gsettings_ensure org.gnome.mutter overlay-key ""
 
 # {{   if not .is_wsl }}
 gsettings_ensure org.gnome.shell.extensions.user-theme name "Yaru-dark" user-theme@gnome-shell-extensions.gcampax.github.com
