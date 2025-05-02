@@ -28,3 +28,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "All tests passed!"
+
+  notify:
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - uses: lacherogwu/failed-jobs-discord-notification-action@v1
+        with:
+          discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          needs_json: ${{ toJSON(needs) }}
