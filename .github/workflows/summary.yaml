@@ -1,0 +1,154 @@
+name: Daily Commit Summary
+
+on:
+  schedule:
+    # Runs at 5:00 AM and 12:00 PM UTC
+    - cron: '0 5,12 * * *'
+  workflow_dispatch: # Allows manual triggering for testing
+
+jobs:
+  summarize-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetches all history
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Check for new commits
+        id: check-commits
+        run: |
+          # Get the date 24 hours ago at the specified time (5 AM or 12 PM)
+          CURRENT_HOUR=$(date -u +%H)
+          if [ $CURRENT_HOUR -eq 5 ]; then
+            # If current time is 5 AM, look for commits since 12 PM yesterday
+            SINCE=$(date -u -d "yesterday 12:00" +"%Y-%m-%dT12:00:00Z")
+          else
+            # If current time is 12 PM, look for commits since 5 AM today
+            SINCE=$(date -u -d "today 05:00" +"%Y-%m-%dT05:00:00Z")
+          fi
+
+          UNTIL=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          # Get commits since the last check
+          COMMITS=$(git log --since="$SINCE" --until="$UNTIL" --pretty=format:"%h - %s (%an)" --reverse)
+          COMMIT_COUNT=$(echo "$COMMITS" | grep -v "^$" | wc -l)
+
+          # Store commit info
+          echo "$COMMITS" > commits.txt
+          echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
+
+          if [ $COMMIT_COUNT -gt 0 ]; then
+            echo "has_commits=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_commits=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate AI summary
+        if: steps.check-commits.outputs.has_commits == 'true'
+        id: ai-summary
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # Install dependencies
+          npm install axios
+
+          # Create a temporary script
+          cat > summarize.js << 'EOF'
+          const axios = require('axios');
+          const fs = require('fs');
+
+          async function summarizeCommits() {
+            try {
+              // Read commit data
+              const commitData = fs.readFileSync('commits.txt', 'utf8');
+
+              // Call OpenAI API
+              const response = await axios.post(
+                'https://api.openai.com/v1/chat/completions',
+                {
+                  model: "gpt-4-turbo",
+                  messages: [
+                    {
+                      role: "system",
+                      content: "You are a helpful assistant that summarizes git commits. Provide a concise summary with key changes and impact. Use simple Discord-compatible markdown (bold, italic, bullet points). Keep each point brief and clear. Organize commits into logical categories. Do NOT use complex markdown or HTML."
+                    },
+                    {
+                      role: "user",
+                      content: `Summarize these commits in a clear, organized way:\n\n${commitData}`
+                    }
+                  ],
+                  temperature: 0.7,
+                  max_tokens: 500
+                },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+                  }
+                }
+              );
+
+              // Process the summary for Discord compatibility
+              let summary = response.data.choices[0].message.content;
+
+              // Replace any markdown headers with bold text
+              summary = summary.replace(/^#+\s+(.*?)$/gm, '**$1**');
+
+              // Ensure bullet points are simple
+              summary = summary.replace(/^[*-]\s+(.*?)$/gm, '• $1');
+
+              fs.writeFileSync('summary.md', summary);
+            } catch (error) {
+              console.error('Error in AI summary:', error.message);
+              fs.writeFileSync('summary.md', 'Failed to generate commit summary.');
+              process.exit(1);
+            }
+          }
+
+          summarizeCommits();
+          EOF
+
+          # Run the script
+          node summarize.js
+
+      - name: Send message to Discord
+        if: steps.check-commits.outputs.has_commits == 'true'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          COMMIT_COUNT: ${{ steps.check-commits.outputs.commit_count }}
+        run: |
+          # Read the summary file directly instead of using GitHub outputs
+          SUMMARY=$(cat summary.md)
+
+          # Create a JSON payload for Discord
+          cat > discord-payload.json << EOF
+          {
+            "embeds": [
+              {
+                "title": "📋 Daily Commit Summary",
+                "description": "Found ${COMMIT_COUNT} new commit(s) since last check.",
+                "color": 39423,
+                "fields": [
+                  {
+                    "name": "Summary",
+                    "value": "${SUMMARY//\"/\\\"}"
+                  }
+                ],
+                "footer": {
+                  "text": "GitHub Actions"
+                }
+              }
+            ],
+            "username": "GitHub Actions",
+            "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          }
+          EOF
+
+          # Send to Discord using curl
+          curl -H "Content-Type: application/json" -d @discord-payload.json $DISCORD_WEBHOOK

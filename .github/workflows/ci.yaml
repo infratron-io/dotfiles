@@ -38,3 +38,6 @@ jobs:
         with:
           discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           needs_json: ${{ toJSON(needs) }}
+          color: 0x0099ff
+          username: GitHub Actions
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
