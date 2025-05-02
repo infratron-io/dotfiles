@@ -93,7 +93,6 @@ if [[ ${#missing_packages[@]} -gt 0 ]]; then
   log_task "Installing missing packages with APT: ${missing_packages[*]}"
 
   c apt update
-  c apt upgrade --yes
 
   extra_args=()
   if [[ "${DOTFILES_TEST:-}" == true ]]; then
