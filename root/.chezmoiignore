@@ -3,6 +3,7 @@ etc/apt/sources.list.d/vscode.list
 etc/apt/sources.list.d/google-chrome.list
 etc/apt/sources.list.d/password.list
 etc/apt/sources.list.d/spotify.list
+etc/apt/sources.list.d/ulauncher.list
 {{ end }}
 
 {{ if not .install_hyprland }}
