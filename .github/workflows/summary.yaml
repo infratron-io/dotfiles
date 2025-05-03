@@ -76,7 +76,7 @@ jobs:
                   messages: [
                     {
                       role: "system",
-                      content: "You are a helpful assistant that summarizes git commits. Provide a concise summary with key changes and impact. Use simple Discord-compatible markdown (bold, italic, bullet points). Keep each point brief and clear. Organize commits into logical categories. Do NOT use complex markdown or HTML."
+                      content: "You are a helpful assistant that summarizes git commits. Provide a concise summary with key changes and impact. Format the summary in markdown."
                     },
                     {
                       role: "user",
@@ -94,15 +94,7 @@ jobs:
                 }
               );
 
-              // Process the summary for Discord compatibility
-              let summary = response.data.choices[0].message.content;
-
-              // Replace any markdown headers with bold text
-              summary = summary.replace(/^#+\s+(.*?)$/gm, '**$1**');
-
-              // Ensure bullet points are simple
-              summary = summary.replace(/^[*-]\s+(.*?)$/gm, '• $1');
-
+              const summary = response.data.choices[0].message.content;
               fs.writeFileSync('summary.md', summary);
             } catch (error) {
               console.error('Error in AI summary:', error.message);
@@ -117,38 +109,25 @@ jobs:
           # Run the script
           node summarize.js
 
+          # Prepare summary for GitHub output
+          SUMMARY=$(cat summary.md)
+          SUMMARY="${SUMMARY//'%'/'%25'}"
+          SUMMARY="${SUMMARY//$'\n'/'%0A'}"
+          SUMMARY="${SUMMARY//$'\r'/'%0D'}"
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Send message to Discord
         if: steps.check-commits.outputs.has_commits == 'true'
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          COMMIT_COUNT: ${{ steps.check-commits.outputs.commit_count }}
-        run: |
-          # Read the summary file directly instead of using GitHub outputs
-          SUMMARY=$(cat summary.md)
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          title: "📋 Daily Commit Summary"
+          description: |
+            Found ${{ steps.check-commits.outputs.commit_count }} new commit(s) since last check.
 
-          # Create a JSON payload for Discord
-          cat > discord-payload.json << EOF
-          {
-            "embeds": [
-              {
-                "title": "📋 Daily Commit Summary",
-                "description": "Found ${COMMIT_COUNT} new commit(s) since last check.",
-                "color": 39423,
-                "fields": [
-                  {
-                    "name": "Summary",
-                    "value": "${SUMMARY//\"/\\\"}"
-                  }
-                ],
-                "footer": {
-                  "text": "GitHub Actions"
-                }
-              }
-            ],
-            "username": "GitHub Actions",
-            "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-          }
-          EOF
-
-          # Send to Discord using curl
-          curl -H "Content-Type: application/json" -d @discord-payload.json $DISCORD_WEBHOOK
+            ${{ steps.ai-summary.outputs.summary }}
+          color: 0x0099ff
+          username: GitHub Actions
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
