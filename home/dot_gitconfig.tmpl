@@ -2,6 +2,15 @@
 name = {{ .name }}
 email = {{ .email }}
 
+[commit]
+gpgsign = true
+
+[tag]
+gpgSign = true
+
+[gpg]
+format = ssh
+
 [core]
 editor = {{ .editor }}
 

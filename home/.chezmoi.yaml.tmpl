@@ -99,6 +99,9 @@ git:
   autoCommit: true
   autoPush: true
 
+1password:
+  mode: account
+
 hooks:
   read-source-state:
     pre:
@@ -119,8 +122,18 @@ data:
   name: "{{ $name }}"
   email: "{{ $email }}"
 
-  majorVersion: {{ $majorVersion }}
+  major_version: {{ $majorVersion }}
 
   editor: "vim"
 
   uname_arch: "{{ output "uname" "-m" | trim }}"
+
+  onepassword:
+    vault: Private
+
+  gpg:
+    vault_item: gpg-signing-key
+    default_key: main
+    keyserver: "hkp://keyserver.ubuntu.com"
+    use_agent: false
+    no_autostart: false
